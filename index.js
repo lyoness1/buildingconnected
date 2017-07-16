@@ -35,6 +35,14 @@ app.get('/api/companies', (req, res) => {
 	})
 })
 
+app.get('/api/companies/:id', (req, res) => {
+	res.setHeader('Content-Type', 'application/json')
+	res.json({
+		total: 1,
+		results: companies[req.params.id],
+	})
+})
+
 app.listen(3000, () => {
 	console.log('Commencing primary ignition')
 })

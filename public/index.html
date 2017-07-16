@@ -1,1 +1,41 @@
-Hello, world!
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Find a Company</title>
+</head>
+<body>
+
+	<h1>Companies</h1>
+	<ul id='companies'></ul>
+
+	<script type="text/javascript">
+		function createNode (element) {
+			return document.createElement(element)
+		}
+
+		function append (parent, el) {
+			return parent.appendChild(el)
+		}
+
+		const ul = document.getElementById('companies')
+
+		const url = 'http://localhost:3000/api/companies/'
+		fetch(url)
+			.then((data) => data.json())
+			.then((data) => {
+				let companies = data.results
+				return companies.map((company) => {
+					let li = createNode('li')
+						span = createNode('span')
+					span.innerHTML = company.name
+					append(li, span)
+					append(ul, li)
+				})
+			})
+			.catch((error) => {
+				console.log(error)
+			})
+	</script>
+
+</body>
+</html>
