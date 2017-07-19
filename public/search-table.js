@@ -41,6 +41,7 @@ SearchTable.prototype.getData = function (url) {
 		.catch((error) => {
 			console.log(error);
 		});
+	return this.displayData;
 }
 
 SearchTable.prototype.getNextPage = function() {
@@ -58,8 +59,10 @@ SearchTable.prototype.getPreviousPage = function () {
 }
 
 SearchTable.prototype.setPageLength = function (pageLength) {
-	this.pageLength = pageLength;
-	this.getData(this.constructUrl());
+	if (pageLength !== this.pageLength) {
+		this.pageLength = pageLength;
+		return this.getData(this.constructUrl());
+	}
 }
 
 SearchTable.prototype.updateSearchFilter = function (searchTerm) {
