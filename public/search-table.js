@@ -36,10 +36,7 @@ SearchTable.prototype.getData = function (url) {
 		.then((data) => data.json())
 		.then((data) => {
 			this.totalLength = data.total;
-			let companies = data.results;
-			this.displayData = companies.map((company) => {
-				new Company(company);
-			})
+			this.displayData = data.results;
 		})
 		.catch((error) => {
 			console.log(error);
