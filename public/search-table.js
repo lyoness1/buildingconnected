@@ -10,44 +10,6 @@ function SearchTable (title='Untitled') {
 	this.getData(this.baseUrl);
 }
 
-SearchTable.prototype.setPageLength = function (pageLength=10) {
-	this.pageLength = pageLength;
-}
-
-SearchTable.prototype.getData = function (url) {
-	fetch(url)
-		.then((data) => data.json())
-		.then((data) => {
-			this.totalLength = data.total;
-			let companies = data.results;
-			this.displayData = companies.map((company) => {
-				new Company(company);
-			})
-		})
-		.catch((error) => {
-			console.log(error);
-		});
-}
-
-SearchTable.prototype.filterData = function (searchTerm) {
-	this.searchTerm = searchTerm;
-	this.getData(this.constructUrl());
-}
-
-SearchTable.prototype.getNextPage = function() {
-	if (this.offset + this.pageLength < this.totalLength) {
-		this.offset += this.pageLength;
-	}
-	this.getData(this.constructUrl());
-};
-
-SearchTable.prototype.getPreviousPage = function () {
-	if (this.start - this.pageLength < 0) {
-		this.offset -= this.pageLength;
-	}
-	this.getData(this.constructUrl());
-}
-
 SearchTable.prototype.constructUrl = function () {
 	const url = this.baseUrl;
 	const paramStrings = [];
@@ -69,3 +31,46 @@ SearchTable.prototype.constructUrl = function () {
 	return url;
 }
 
+SearchTable.prototype.getData = function (url) {
+	fetch(url)
+		.then((data) => data.json())
+		.then((data) => {
+			this.totalLength = data.total;
+			let companies = data.results;
+			this.displayData = companies.map((company) => {
+				new Company(company);
+			})
+		})
+		.catch((error) => {
+			console.log(error);
+		});
+}
+
+SearchTable.prototype.getNextPage = function() {
+	if (this.offset + this.pageLength < this.totalLength) {
+		this.offset += this.pageLength;
+	}
+	this.getData(this.constructUrl());
+};
+
+SearchTable.prototype.getPreviousPage = function () {
+	if (this.start - this.pageLength < 0) {
+		this.offset -= this.pageLength;
+	}
+	this.getData(this.constructUrl());
+}
+
+SearchTable.prototype.setPageLength = function (pageLength=10) {
+	this.pageLength = pageLength;
+	this.getData(this.constructUrl());
+}
+
+SearchTable.prototype.updateSearchFilter = function (searchTerm) {
+	this.searchTerm = searchTerm;
+	this.getData(this.constructUrl());
+}
+
+SearchTable.prototype.updateLaborType = function(laborType) {
+	this.laborType = laborType;
+	this.getData(this.constructUrl());
+}
