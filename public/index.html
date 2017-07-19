@@ -5,18 +5,15 @@
 </head>
 <body>
 
-	<h1>Companies</h1>
+	<h1>Find a Company</h1>
 	<ul id='companies'></ul>
 
+	<script type="text/javascript" src="/company.js"></script>
+	<script type="text/javascript" src="/search-table.js"></script>
+	<script type="text/javascript" src="/utils.js"></script>
+	<script type="text/javascript" src="/table-view.js"></script>
+
 	<script type="text/javascript">
-		function createNode (element) {
-			return document.createElement(element)
-		}
-
-		function append (parent, el) {
-			return parent.appendChild(el)
-		}
-
 		const ul = document.getElementById('companies')
 
 		const url = 'http://localhost:3000/api/companies/'
@@ -35,6 +32,7 @@
 			.catch((error) => {
 				console.log(error)
 			})
+
 	</script>
 
 </body>
