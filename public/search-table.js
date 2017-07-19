@@ -3,10 +3,11 @@ function SearchTable (title='Untitled') {
 	this.baseUrl = 'http://localhost:3000/api/companies/';
 	this.totalLength = 0;
 	this.pageLength = this.setPageLength();
-	this.displayData = this.getData(this.baseUrl);
+	this.displayData = [];
 	this.searchTerm = '';
 	this.offset = 0;
 	this.laborType = null;
+	this.getData(this.baseUrl);
 }
 
 SearchTable.prototype.setPageLength = function (pageLength=10) {
@@ -19,8 +20,7 @@ SearchTable.prototype.getData = function (url) {
 		.then((data) => {
 			this.totalLength = data.total;
 			let companies = data.results;
-			this.pageLength = companies.length();
-			return companies.map((company) => {
+			this.displayData = companies.map((company) => {
 				new Company(company);
 			})
 		})
@@ -31,16 +31,21 @@ SearchTable.prototype.getData = function (url) {
 
 SearchTable.prototype.filterData = function (searchTerm) {
 	this.searchTerm = searchTerm;
-	const searchUrl = this.baseUrl + "?q=" + searchTerm;
-	this.displayData = this.getData(searchUrl);
+	this.getData(this.constructUrl());
 }
 
 SearchTable.prototype.getNextPage = function() {
-	return null;
+	if (this.offset + this.pageLength < this.totalLength) {
+		this.offset += this.pageLength;
+	}
+	this.getData(this.constructUrl());
 };
 
 SearchTable.prototype.getPreviousPage = function () {
-	return null;
+	if (this.start - this.pageLength < 0) {
+		this.offset -= this.pageLength;
+	}
+	this.getData(this.constructUrl());
 }
 
 SearchTable.prototype.constructUrl = function () {
@@ -52,7 +57,7 @@ SearchTable.prototype.constructUrl = function () {
 	if (this.offset !== 0) {
 		paramStrings.push('start=' + this.offset);
 	}
-	if (this.pageLength !== 10) {  // given the assumption the default in the API remains 10
+	if (this.pageLength !== 10) {  // assuming the default in the API remains 10
 		paramStrings.push('limit=' + this.pageLength);
 	}
 	if (this.laborType !== null) {
