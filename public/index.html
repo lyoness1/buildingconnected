@@ -5,34 +5,18 @@
 </head>
 <body>
 
-	<h1>Find a Company</h1>
-	<ul id='companies'></ul>
+	<h1>I'm a Neat Page Title</h1>
+	<div id='search-table'></div>
 
-	<script type="text/javascript" src="/company.js"></script>
-	<script type="text/javascript" src="/search-table.js"></script>
-	<script type="text/javascript" src="/utils.js"></script>
-	<script type="text/javascript" src="/table-view.js"></script>
+	<script src="/company.js"></script>
+	<script src="/search-table.js"></script>
+	<script src="/utils.js"></script>
+	<script src="/table-view.js"></script>
 
-	<script type="text/javascript">
-		const ul = document.getElementById('companies')
-
-		const url = 'http://localhost:3000/api/companies/'
-		fetch(url)
-			.then((data) => data.json())
-			.then((data) => {
-				let companies = data.results
-				return companies.map((company) => {
-					let li = createNode('li')
-						span = createNode('span')
-					span.innerHTML = company.name
-					append(li, span)
-					append(ul, li)
-				})
-			})
-			.catch((error) => {
-				console.log(error)
-			})
-
+	<script>
+		const searchTable = new TableView();
+		const ul = document.getElementById('search-table');
+		ul.append(searchTable.view);
 	</script>
 
 </body>
