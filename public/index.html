@@ -1,22 +1,69 @@
-<!DOCTYPE html>
 <html>
 <head>
 	<title>Find a Company</title>
+
+	<!-- <script src="/utils.js"></script>
+	<script src="/search-table.js"></script>
+	<script src="/table-view.js"></script> -->
+
 </head>
 <body>
 
-	<h1>I'm a Neat Page Title</h1>
-	<div id='search-table'></div>
-
-	<script src="/company.js"></script>
-	<script src="/search-table.js"></script>
-	<script src="/utils.js"></script>
-	<script src="/table-view.js"></script>
+	<h1>Find a Company</h1>
+	<input id='search-input'>
 
 	<script>
-		const searchTable = new TableView();
-		const ul = document.getElementById('search-table');
-		ul.append(searchTable.view);
+		function DataTable () {
+			this.baseUrl = 'http://localhost:3000/api/companies/';
+			this.length = 0;
+			this.data = null;
+		}
+
+		DataTable.prototype.getData = function () {
+			return promise = new Promise((resolve, reject) => {
+				const _this = this;
+				var url = this.baseUrl;
+				fetch(url).then((data) => 
+					data.json()
+				).then((data) => {
+					_this.data = data.results;
+					_this.length = data.total;
+					resolve(_this);
+				}).catch((error) => {
+					reject(error);
+				})
+			});
+		}
+
+		function FancyTable (dataTable) {
+			this.table = dataTable;
+		}
+
+		FancyTable.prototype.render = function () {
+			var $table = document.createElement('table');
+			var $body = document.createElement('tbody');
+			this.table.data.map((company) => {
+				var $cell = document.createElement('td');
+				$cell.innerHTML = company.name;
+				var $row = document.createElement('tr');
+				$row.appendChild($cell);
+				$body.appendChild($row);
+			});
+			return $body;
+		}
+
+	</script>
+	
+	<script>
+		document.addEventListener("DOMContentLoaded", function(){
+			var dataTable = new DataTable();
+			dataTable.getData().then((dataTable) => {
+				var $table = new FancyTable(dataTable).render();
+				document.body.appendChild($table);
+			}).catch((error) => {
+				console.log('An error occured', error)
+			});
+		});
 	</script>
 
 </body>

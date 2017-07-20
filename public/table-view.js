@@ -1,44 +1,19 @@
 function TableView() {
-	this.table = new SearchTable('Find a Company');
-	this.view = this.render();
+	this.searchTable = new SearchTable();
+	this.searchTable.getData().then(() => {
+		this.render();
+	})
 }
 
 TableView.prototype.render = function () {
-	let node = createNode('h1');
-	node.innerHTML = 'Title!';
-	return node;
+	this.table = document.createElement('table');
+	var body = document.createElement('tbody');
+	this.searchTable.data.map((company) => {
+		let row = document.createElement('tr');
+		let cell = document.createElement('td');
+		cell.innerHTML = company.name;
+		row.appendChild(cell);
+		body.appendChild(row);
+	});
+	this.table.appendChild(body);
 }
-
-/**
-const table = document.getElementById('search-table');
-
-
-	<h1>Find a Company</h1>
-	<ul id='companies'></ul>
-
-	<script type="text/javascript" src="/company.js"></script>
-	<script type="text/javascript" src="/search.js"></script>
-	<script type="text/javascript" src="/utils.js"></script>
-
-	<script type="text/javascript">
-		const ul = document.getElementById('companies')
-
-		const url = 'http://localhost:3000/api/companies/'
-		fetch(url)
-			.then((data) => data.json())
-			.then((data) => {
-				let companies = data.results
-				return companies.map((company) => {
-					let li = createNode('li')
-						span = createNode('span')
-					span.innerHTML = company.name
-					append(li, span)
-					append(ul, li)
-				})
-			})
-			.catch((error) => {
-				console.log(error)
-			})
-
-	</script>
-*/

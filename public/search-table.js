@@ -1,47 +1,39 @@
-function SearchTable (title='Untitled') {
-	this.title = title;
+function SearchTable () {
 	this.baseUrl = 'http://localhost:3000/api/companies/';
-	this.totalLength = 0;
-	this.pageLength = this.setPageLength(10);
-	this.displayData = [];
-	this.searchTerm = '';
-	this.offset = 0;
-	this.laborType = [];
-	this.getData(this.baseUrl);
+	this.params = {
+		searchTerm: null,
+		start: null,
+		limit: null,
+		laborType: null
+	}
 }
 
 SearchTable.prototype.constructUrl = function () {
-	let url = this.baseUrl;
-	let paramStrings = [];
-	if (this.searchTerm !== '') {
-		paramStrings.push('q=' + this.searchTerm);
-	}
-	if (this.offset !== 0) {
-		paramStrings.push('start=' + this.offset);
-	}
-	if (this.pageLength !== 10) {  // assuming the default in the API remains 10
-		paramStrings.push('limit=' + this.pageLength);
-	}
-	if (this.laborType !== undefined) {
-		paramStrings.push('laborType=' + this.laborType.join(','));
-	}
+	var url = this.baseUrl;
+	var {searchTerm, start, limit, laborType} = this.params;
+	var paramStrings = [];
+	searchTerm ? paramStrings.push('q=' + this.searchTerm) : noop();
+	start ? paramStrings.push('start=' + this.start) : noop();
+	limit ? paramStrings.push('limit=' + this.limit) : noop();
+	laborType ? paramStrings.push('laborType=' + this.laborType.join(',')) : noop();
 	paramStrings.forEach((param) => {
 		url += (url.split('?')[1] ? '&':'?') + param;
 	})
 	return url;
 }
 
-SearchTable.prototype.getData = function (url) {
-	fetch(url)
-		.then((data) => data.json())
-		.then((data) => {
-			this.totalLength = data.total;
-			this.displayData = data.results;
-		})
-		.catch((error) => {
+SearchTable.prototype.getData = function () {
+	var url = this.constructUrl();
+	return new Promise((res, rej) => {
+		 fetch(url).then((data) => 
+			data.json()
+		).then((data) => {
+			this.data = data.results;
+			this.length = data.total;
+		}).catch((error) => {
 			console.log(error);
-		});
-	return this.displayData;
+		}.bind(this));
+	}.bind(this));
 }
 
 SearchTable.prototype.getNextPage = function() {
@@ -61,7 +53,7 @@ SearchTable.prototype.getPreviousPage = function () {
 SearchTable.prototype.setPageLength = function (pageLength) {
 	if (pageLength !== this.pageLength) {
 		this.pageLength = pageLength;
-		return this.getData(this.constructUrl());
+		this.getData(this.constructUrl());
 	}
 }
 
