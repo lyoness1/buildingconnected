@@ -1,28 +1,48 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<title>Find a Company</title>
 
-	<!-- <script src="/utils.js"></script>
-	<script src="/search-table.js"></script>
+	<script src="/utils.js"></script>
+	<!-- <script src="/fancy-table.js"></script>
 	<script src="/table-view.js"></script> -->
 
-</head>
 <body>
 
 	<h1>Find a Company</h1>
 	<input id='search-input'>
 
 	<script>
+		// Model to handle API communication
 		function DataTable () {
 			this.baseUrl = 'http://localhost:3000/api/companies/';
 			this.length = 0;
 			this.data = null;
+			this.params = {
+				searchTerm: null,
+				start: 0,
+				limit: 10,
+				laborType: null
+			}
 		}
 
-		DataTable.prototype.getData = function () {
+		DataTable.prototype.constructUrl = function () {
+			var url = this.baseUrl;
+			var {searchTerm, start, limit, laborType} = this.params;
+			var paramStrings = [];
+			searchTerm ? paramStrings.push('q=' + searchTerm) : noop();
+			(start !== 0) ? paramStrings.push('start=' + start) : noop();
+			limit ? paramStrings.push('limit=' + limit) : noop();
+			laborType ? paramStrings.push('laborType=' + laborType.join(',')) : noop();
+			paramStrings.forEach((param) => {
+				url += (url.split('?')[1] ? '&':'?') + param;
+			})
+			return url;
+		}
+
+		DataTable.prototype.getData = function (url) {
 			return promise = new Promise((resolve, reject) => {
 				const _this = this;
-				var url = this.baseUrl;
 				fetch(url).then((data) => 
 					data.json()
 				).then((data) => {
@@ -35,6 +55,17 @@
 			});
 		}
 
+		DataTable.prototype.getNextPage = function() {
+			var {searchTerm, start, limit, laborType} = this.params;
+			(start + limit < this.length) ? (this.params.start += limit) : noop();
+			this.getData(this.constructUrl()).then((dataTable) => {
+				return dataTable;
+			}).catch((error => {
+				console.log('An error occured: ', error);
+			}));
+		};
+
+		// View to handle page rendering of dataTable
 		function FancyTable (dataTable) {
 			this.table = dataTable;
 		}
@@ -57,7 +88,7 @@
 	<script>
 		document.addEventListener("DOMContentLoaded", function(){
 			var dataTable = new DataTable();
-			dataTable.getData().then((dataTable) => {
+			dataTable.getData(dataTable.baseUrl).then((dataTable) => {
 				var $table = new FancyTable(dataTable).render();
 				document.body.appendChild($table);
 			}).catch((error) => {
