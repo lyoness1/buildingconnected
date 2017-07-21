@@ -40,45 +40,40 @@
 			return url;
 		}
 
-		DataTable.prototype.getData = function () {
-			return promise = new Promise((resolve, reject) => {
-				var url = this.constructUrl()
-				const _this = this;
-				fetch(url).then((data) => 
-					data.json()
-				).then((data) => {
-					_this.data = data.results;
-					_this.length = data.total;
-					resolve(_this);
+		DataTable.prototype.getDataPromise = function () {
+			var url = this.constructUrl();
+			return fetch(url).then((response) => {
+				return response.json().then((data) => {
+					this.data = data.results;
+					this.length = data.total;
+					return Promise.resolve(this);
 				}).catch((error) => {
-					console.log('An error occured: ', error);
-				})
-			});
+          return Promise.reject(new ResponseError('Invalid JSON: ' + error.message));
+        });
+			}).then((dataTable) => {
+				return dataTable;
+			}).catch((error) => {
+		    return Promise.reject(new NetworkError(error.message));
+		  });
 		}
 
-		DataTable.prototype.getNextPage = function() {
+		DataTable.prototype.getNextPagePromise = function() {
 			var {searchTerm, start, limit, laborType} = this.params;
 			(start + limit < this.length) ? (this.params.start += limit) : noop();
-			this.getData().then((dataTable) => {
-				return dataTable;
-			});
+			return this.getDataPromise();
 		};
 
-		DataTable.prototype.getPreviousPage = function() {
+		DataTable.prototype.getPreviousPagePromise = function() {
 			var {searchTerm, start, limit, laborType} = this.params;
 			(start - limit >= 0) ? (this.params.start -= limit) : noop();
-			this.getData().then((dataTable) => {
-				return dataTable;
-			});
+			return this.getDataPromise();
 		};
 
-		DataTable.prototype.setLimit = function (limit) {
+		DataTable.prototype.setLimitPromise = function (limit) {
 			(limit >= 1 && limit <= 100) ? this.params.limit = limit : (
 				console.log('Limit must be between 0 and 100')
 			);
-			this.getData().then((dataTable) => {
-				return dataTable;
-			});
+			this.getDataPromise();
 		}
 
 		// View to handle page rendering of dataTable
@@ -104,7 +99,7 @@
 	<script>
 		document.addEventListener("DOMContentLoaded", function(){
 			var dataTable = new DataTable();
-			dataTable.getData().then((dataTable) => {
+			dataTable.getDataPromise().then((dataTable) => {
 				var $table = new FancyTable(dataTable).render();
 				document.body.appendChild($table);
 			});
