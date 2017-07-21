@@ -76,13 +76,23 @@
 			this.getDataPromise();
 		}
 
-		// View to handle page rendering of dataTable
+		// View to handle rendering of dataTable
 		function FancyTable (dataTable) {
 			this.table = dataTable;
 		}
 
 		FancyTable.prototype.render = function () {
 			var $table = document.createElement('table');
+			$table.setAttribute('id', 'fancy-table');
+			var $body = this.renderBody();
+			var $footer = this.renderFooter();
+			$table.appendChild($footer);
+			$table.appendChild($body);
+			// Append to document.body here? 
+			return $table;
+		}
+
+		FancyTable.prototype.renderBody = function () {
 			var $body = document.createElement('tbody');
 			this.table.data.map((company) => {
 				var $cell = document.createElement('td');
@@ -94,14 +104,60 @@
 			return $body;
 		}
 
+		FancyTable.prototype.updateBody = function () {
+			var $currentBody = document.getElementsByTagName('tbody')[0] || null;
+			var $newBody = this.renderBody();
+			if ($currentBody) {
+				var $currentBodyParent = document.getElementsByTagName('table')[0];
+				$currentBodyParent.replaceChild($newBody, $currentBody);
+			}
+		}
+
+		FancyTable.prototype.renderFooter = function () {
+			var $footer = document.createElement('tfoot');
+			var $row = document.createElement('tr');
+			var $previousBtn = document.createElement('button');
+			$previousBtn.innerHTML = 'Previous';
+			$previousBtn.setAttribute('id', 'previous-btn');
+			var $nextBtn = document.createElement('button');
+			$nextBtn.innerHTML = 'Next';
+			$nextBtn.setAttribute('id', 'next-btn');
+			$row.appendChild($previousBtn);
+			$row.appendChild($nextBtn);
+			$footer.appendChild($row);
+			return $footer;
+		}
+
+		FancyTable.prototype.addEventListeners = function () {
+			var $previousBtn = document.getElementById('previous-btn');
+			$previousBtn.addEventListener('click', this.getPreviousPage.bind(this));
+			var $nextBtn = document.getElementById('next-btn');
+			$nextBtn.addEventListener('click', this.getNextPage.bind(this));
+		}
+
+		FancyTable.prototype.getNextPage = function () {
+			this.table.getNextPagePromise().then((table) => {
+				this.updateBody();
+			})
+		}
+
+		FancyTable.prototype.getPreviousPage = function () {
+			this.table.getPreviousPagePromise().then((table) => {
+				this.updateBody();
+			})
+		}
+
 	</script>
 	
 	<script>
 		document.addEventListener("DOMContentLoaded", function(){
 			var dataTable = new DataTable();
 			dataTable.getDataPromise().then((dataTable) => {
-				var $table = new FancyTable(dataTable).render();
-				document.body.appendChild($table);
+				var table = new FancyTable(dataTable);
+				document.body.appendChild(table.render());
+				return table;
+			}).then((table) => {
+				table.addEventListeners();
 			});
 		});
 	</script>
