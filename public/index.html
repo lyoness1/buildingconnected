@@ -50,7 +50,7 @@
 					_this.length = data.total;
 					resolve(_this);
 				}).catch((error) => {
-					reject(error);
+					console.log('An error occured: ', error);
 				})
 			});
 		}
@@ -60,9 +60,15 @@
 			(start + limit < this.length) ? (this.params.start += limit) : noop();
 			this.getData(this.constructUrl()).then((dataTable) => {
 				return dataTable;
-			}).catch((error => {
-				console.log('An error occured: ', error);
-			}));
+			});
+		};
+
+		DataTable.prototype.getPreviousPage = function() {
+			var {searchTerm, start, limit, laborType} = this.params;
+			(start - limit >= 0) ? (this.params.start -= limit) : noop();
+			this.getData(this.constructUrl()).then((dataTable) => {
+				return dataTable;
+			});
 		};
 
 		// View to handle page rendering of dataTable
@@ -91,8 +97,6 @@
 			dataTable.getData(dataTable.baseUrl).then((dataTable) => {
 				var $table = new FancyTable(dataTable).render();
 				document.body.appendChild($table);
-			}).catch((error) => {
-				console.log('An error occured', error)
 			});
 		});
 	</script>
