@@ -40,8 +40,9 @@
 			return url;
 		}
 
-		DataTable.prototype.getData = function (url) {
+		DataTable.prototype.getData = function () {
 			return promise = new Promise((resolve, reject) => {
+				var url = this.constructUrl()
 				const _this = this;
 				fetch(url).then((data) => 
 					data.json()
@@ -58,7 +59,7 @@
 		DataTable.prototype.getNextPage = function() {
 			var {searchTerm, start, limit, laborType} = this.params;
 			(start + limit < this.length) ? (this.params.start += limit) : noop();
-			this.getData(this.constructUrl()).then((dataTable) => {
+			this.getData().then((dataTable) => {
 				return dataTable;
 			});
 		};
@@ -66,10 +67,19 @@
 		DataTable.prototype.getPreviousPage = function() {
 			var {searchTerm, start, limit, laborType} = this.params;
 			(start - limit >= 0) ? (this.params.start -= limit) : noop();
-			this.getData(this.constructUrl()).then((dataTable) => {
+			this.getData().then((dataTable) => {
 				return dataTable;
 			});
 		};
+
+		DataTable.prototype.setLimit = function (limit) {
+			(limit >= 1 && limit <= 100) ? this.params.limit = limit : (
+				console.log('Limit must be between 0 and 100')
+			);
+			this.getData().then((dataTable) => {
+				return dataTable;
+			});
+		}
 
 		// View to handle page rendering of dataTable
 		function FancyTable (dataTable) {
@@ -94,7 +104,7 @@
 	<script>
 		document.addEventListener("DOMContentLoaded", function(){
 			var dataTable = new DataTable();
-			dataTable.getData(dataTable.baseUrl).then((dataTable) => {
+			dataTable.getData().then((dataTable) => {
 				var $table = new FancyTable(dataTable).render();
 				document.body.appendChild($table);
 			});
