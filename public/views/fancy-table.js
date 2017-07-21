@@ -20,7 +20,7 @@ FancyTable.prototype.renderBody = function () {
 		$cell.innerHTML = company.name;
 		var $row = document.createElement('tr');
 		var index = this.table.data.indexOf(company);
-		$row.setAttribute('row-index', index);
+		$row.setAttribute('id', 'index-' + index);
 		$row.appendChild($cell);
 		$body.appendChild($row);
 	});
@@ -34,6 +34,9 @@ FancyTable.prototype.updateBody = function () {
 		var $currentBodyParent = document.getElementsByTagName('table')[0];
 		$currentBodyParent.replaceChild($newBody, $currentBody);
 	}
+	Array.from(document.getElementsByTagName('tr')).slice(0,-1).forEach((row) => {
+		row.addEventListener('click', this.handleClickRow.bind(this));
+	});
 }
 
 FancyTable.prototype.renderFooter = function () {
@@ -61,6 +64,9 @@ FancyTable.prototype.addEventListeners = function () {
 	document.getElementById('next-btn').addEventListener(
 		'click', this.getNextPage.bind(this)
 	);
+	Array.from(document.getElementsByTagName('tr')).slice(1).forEach((row) => {
+		row.addEventListener('click', this.handleClickRow.bind(this));
+	});
 }
 
 FancyTable.prototype.updateFilter = debounce(function (e) {
@@ -80,4 +86,9 @@ FancyTable.prototype.getPreviousPage = function () {
 	this.table.getPreviousPagePromise().then((table) => {
 		this.updateBody();
 	});
+}
+
+FancyTable.prototype.handleClickRow = function (e) {
+	var $row = e.target.parentNode;
+	console.log($row);
 }
