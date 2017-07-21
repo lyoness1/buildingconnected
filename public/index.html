@@ -2,17 +2,15 @@
 <html>
 <head>
 	<title>Find a Company</title>
-
-	<script src="/utils.js"></script>
-	<!-- <script src="/fancy-table.js"></script>
-	<script src="/table-view.js"></script> -->
-
 <body>
 
 	<h1>Find a Company</h1>
 	<input id='search-input'>
 
 	<script>
+		function noop () {};
+
+
 		// Model to handle API communication
 		function DataTable () {
 			this.baseUrl = 'http://localhost:3000/api/companies/';
@@ -75,6 +73,12 @@
 			);
 			this.getDataPromise();
 		}
+
+		DataTable.prototype.updateFilterPromise = function (searchTerm) {
+			this.params.searchTerm = searchTerm;
+			this.getDataPromise();
+		}
+
 
 		// View to handle rendering of dataTable
 		function FancyTable (dataTable) {
