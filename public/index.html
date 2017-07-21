@@ -5,11 +5,22 @@
 <body>
 
 	<h1>Find a Company</h1>
-	<input id='search-input'>
+	<input id='search-input' placeholder="Search by name">
 
 	<script>
+		// Utility functions
 		function noop () {};
 
+		function debounce(fn, delay) {
+		  var timer = null;
+		  return function () {
+		    var context = this, args = arguments;
+		    clearTimeout(timer);
+		    timer = setTimeout(function () {
+		      fn.apply(context, args);
+		    }, delay);
+		  };
+		}
 
 		// Model to handle API communication
 		function DataTable () {
@@ -71,12 +82,12 @@
 			(limit >= 1 && limit <= 100) ? this.params.limit = limit : (
 				console.log('Limit must be between 0 and 100')
 			);
-			this.getDataPromise();
+			return this.getDataPromise();
 		}
 
 		DataTable.prototype.updateFilterPromise = function (searchTerm) {
 			this.params.searchTerm = searchTerm;
-			this.getDataPromise();
+			return this.getDataPromise();
 		}
 
 
@@ -92,7 +103,6 @@
 			var $footer = this.renderFooter();
 			$table.appendChild($footer);
 			$table.appendChild($body);
-			// Append to document.body here? 
 			return $table;
 		}
 
@@ -133,22 +143,34 @@
 		}
 
 		FancyTable.prototype.addEventListeners = function () {
-			var $previousBtn = document.getElementById('previous-btn');
-			$previousBtn.addEventListener('click', this.getPreviousPage.bind(this));
-			var $nextBtn = document.getElementById('next-btn');
-			$nextBtn.addEventListener('click', this.getNextPage.bind(this));
+			document.getElementById('search-input').addEventListener(
+				'input', this.updateFilter.bind(this)
+			);
+			document.getElementById('previous-btn').addEventListener(
+				'click', this.getPreviousPage.bind(this)
+			);
+			document.getElementById('next-btn').addEventListener(
+				'click', this.getNextPage.bind(this)
+			);
 		}
+
+		FancyTable.prototype.updateFilter = debounce(function (e) {
+			var value = e.target.value;
+			this.table.updateFilterPromise(value).then((table) => {
+				this.updateBody();
+			})
+		}, 1000);
 
 		FancyTable.prototype.getNextPage = function () {
 			this.table.getNextPagePromise().then((table) => {
 				this.updateBody();
-			})
+			});
 		}
 
 		FancyTable.prototype.getPreviousPage = function () {
 			this.table.getPreviousPagePromise().then((table) => {
 				this.updateBody();
-			})
+			});
 		}
 
 	</script>
