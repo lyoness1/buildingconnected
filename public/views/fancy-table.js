@@ -34,8 +34,8 @@ FancyTable.prototype.updateBody = function () {
 		var $currentBodyParent = document.getElementsByTagName('table')[0];
 		$currentBodyParent.replaceChild($newBody, $currentBody);
 	}
-	Array.from(document.getElementsByTagName('tr')).slice(0,-1).forEach((row) => {
-		row.addEventListener('click', this.handleClickRow.bind(this));
+	Array.from(document.getElementsByTagName('tr')).slice(1).forEach((row) => {
+		row.addEventListener('click', this.handleExpandRow.bind(this));
 	});
 }
 
@@ -65,7 +65,7 @@ FancyTable.prototype.addEventListeners = function () {
 		'click', this.getNextPage.bind(this)
 	);
 	Array.from(document.getElementsByTagName('tr')).slice(1).forEach((row) => {
-		row.addEventListener('click', this.handleClickRow.bind(this));
+		row.addEventListener('click', this.handleExpandRow.bind(this));
 	});
 }
 
@@ -88,7 +88,20 @@ FancyTable.prototype.getPreviousPage = function () {
 	});
 }
 
-FancyTable.prototype.handleClickRow = function (e) {
-	var $row = e.target.parentNode;
-	console.log($row);
+FancyTable.prototype.handleExpandRow = function (e) {
+	var rowIndex = e.currentTarget.id.split('-')[1];
+	var company = this.table.data[rowIndex];
+	var $logo = document.createElement('img');
+	$logo.src = company.avatarUrl;
+	$logo.setAttribute('class', 'logo')
+	var $imageContainer = document.createElement('span');
+	$imageContainer.appendChild($logo);
+
+	var $infoContainer = document.createElement('span');
+	$infoContainer.innerHTML = "Information \n more information \n even more..."
+
+	var $newCell = document.createElement('td');
+	$newCell.appendChild($imageContainer);
+	$newCell.appendChild($infoContainer);
+	e.target.replaceWith($newCell);
 }
