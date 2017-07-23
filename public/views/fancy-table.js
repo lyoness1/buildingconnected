@@ -5,11 +5,30 @@ function FancyTable (dataTable) {
 
 FancyTable.prototype.render = function () {
 	var $table = makeElement('table', {'id': 'fancy-table'})
+	var $header = this.renderHeader();
 	var $body = this.renderBody();
 	var $footer = this.renderFooter();
+	$table.appendChild($header);
 	$table.appendChild($footer);
 	$table.appendChild($body);
 	return $table;
+}
+
+FancyTable.prototype.renderHeader = function () {
+	var $header = makeElement('thead');
+	var $row = makeElement('row');
+	var $cell = makeElement('td');
+	var $title = makeElement('span')
+	$title.innerHTML = 'Companies';
+	var $searchBox = makeElement('input', {'id': 'search-input', 'placeholder': 'Search by name'});
+	$searchBox.addEventListener('input', this.updateFilter.bind(this));
+	var $searchBoxContainer = makeElement('span');
+	$searchBoxContainer.appendChild($searchBox);
+	$cell.appendChild($title);
+	$cell.appendChild($searchBoxContainer);
+	$row.appendChild($cell);
+	$header.appendChild($row);
+	return $header;
 }
 
 FancyTable.prototype.renderBody = function () {
@@ -39,24 +58,14 @@ FancyTable.prototype.renderFooter = function () {
 	var $row = document.createElement('tr');
 	var $previousBtn = makeElement('button', {'id': 'previous-btn'});
 	$previousBtn.innerHTML = 'Previous';
+	$previousBtn.addEventListener('click', this.getPreviousPage.bind(this));
 	var $nextBtn = makeElement('button', {'id': 'next-btn'});
 	$nextBtn.innerHTML = 'Next';
+	$nextBtn.addEventListener('click', this.getNextPage.bind(this));
 	$row.appendChild($previousBtn);
 	$row.appendChild($nextBtn);
 	$footer.appendChild($row);
 	return $footer;
-}
-
-FancyTable.prototype.addEventListeners = function () {
-	document.getElementById('search-input').addEventListener(
-		'input', this.updateFilter.bind(this)
-	);
-	document.getElementById('previous-btn').addEventListener(
-		'click', this.getPreviousPage.bind(this)
-	);
-	document.getElementById('next-btn').addEventListener(
-		'click', this.getNextPage.bind(this)
-	);
 }
 
 FancyTable.prototype.updateFilter = debounce(function (e) {

@@ -6,7 +6,6 @@
 <body>
 
 	<h1>Find a Company</h1>
-	<input id='search-input' placeholder="Search by name">
 
 	<!-- Utility functions -->
 	<script src='/utils/utils.js' type="text/javascript"></script>
@@ -16,18 +15,13 @@
 	<script src='/views/fancy-table.js' type="text/javascript"></script>
 	<!-- Controller -->
 	<script>
-		document.addEventListener("DOMContentLoaded", function(){
+		document.addEventListener("DOMContentLoaded", function (){
 			var dataTable = new DataTable();
 			dataTable.getDataPromise().then((dataTable) => {
 				var table = new FancyTable(dataTable);
 				document.body.appendChild(table.render());
-				return table;
-			}).then((table) => {
-				table.addEventListeners();
 			});
 		});
-
-
 	</script>
 
 </body>
