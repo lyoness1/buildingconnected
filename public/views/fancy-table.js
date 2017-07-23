@@ -7,9 +7,9 @@ FancyTable.prototype.render = function () {
 	this.$table = makeElement('table', {'id': 'fancy-table', 'class': 'data-table'})
 	this.$header = this.renderHeader();
 	this.$body = this.renderBody();
-	// this.$footer = this.renderFooter();
+	this.$footer = this.renderFooter();
 	this.$table.appendChild(this.$header);
-	// this.$table.appendChild(this.$footer);
+	this.$table.appendChild(this.$footer);
 	this.$table.appendChild(this.$body);
 	return this.$table;
 }
@@ -42,74 +42,71 @@ FancyTable.prototype.renderBody = function () {
 	return $body;
 }
 
-FancyTable.prototype.updateBody = function () {
-	replaceElement(this.$body, this.renderBody());
-}
-
 FancyTable.prototype.renderFooter = function () {
 	var $footer = document.createElement('tfoot');
 	var $row = document.createElement('tr');
-
-	var $displayMessage = this.renderDisplayMessage();
-
-	var $previousBtn = makeElement('button', {'id': 'previous-btn', 'class': 'disabled'});
-	$previousBtn.innerHTML = 'Previous';
-	$previousBtn.addEventListener('click', this.getPreviousPage.bind(this));
-
-	var $nextBtn = makeElement('button', {'id': 'next-btn'});
-	$nextBtn.innerHTML = 'Next';
-	$nextBtn.addEventListener('click', this.getNextPage.bind(this));
-
-	$row.appendChild($displayMessage);
-	$row.appendChild($previousBtn);
-	$row.appendChild($nextBtn);
+	this.$footerMessage = this.renderFooterMessage();
+	this.$buttons = this.renderButtons();
+	$row.appendChild(this.$footerMessage);
+	$row.appendChild(this.$buttons);
 	$footer.appendChild($row);
 	return $footer;
 }
 
-FancyTable.prototype.updateFooter = function () {
-	var $currentDisplayMessage = document.getElementsById('display-message');
-	$currentDisplayMessage ? replaceElement(this.renderDisplayMessage(), $currentDisplayMessage) : noop();
-	
-	var $previousBtn = document.getElementsById('previous-btn');
+FancyTable.prototype.renderFooterMessage = function () {
+	var $displayMessage = makeElement('span', {'id': 'display-message'});
+	var start = this.table.params.start + 1;
+	var end = (start + this.table.params.limit > this.table.length) ? this.table.length : (start + this.table.params.limit);
+	$displayMessage.innerHTML = 'Displaying rows ' + start + ' through ' + end + ' of ' + this.table.length;
+	return $displayMessage;
+}
+
+FancyTable.prototype.renderButtons = function () {
+	var $buttons = makeElement('span', {'class': 'buttons'});
+
+	var $previousBtn = makeElement('button', {'id': 'previous-btn'});
+	$previousBtn.innerHTML = 'Previous';
+	$previousBtn.addEventListener('click', this.getPreviousPage.bind(this));
 	if (this.table.params.start === 0) {
 		$previousBtn.classList.add('disabled');
 	} else {
 		$previousBtn.classList.contains('disabled') ? $previousBtn.classList.remove('disabled') : noop();
 	}
 
-	if (this.table.params.start + this.table.params.limit > this.table.length) {
-
+	var $nextBtn = makeElement('button', {'id': 'next-btn'});
+	$nextBtn.innerHTML = 'Next';
+	$nextBtn.addEventListener('click', this.getNextPage.bind(this));
+	if (this.table.params.start + this.table.params.limit + 1 > this.table.length) {
+		$nextBtn.classList.add('disabled');
+	} else {
+		$nextBtn.classList.contains('disabled') ? $nextBtn.classList.remove('disabled') : noop();
 	}
+
+	$buttons.appendChild($previousBtn);
+	$buttons.appendChild($nextBtn);
+	return $buttons;
 }
 
-FancyTable.prototype.renderDisplayMessage = function () {
-	var $displayMessage = makeElement('span', {'id': 'display-message'});
-	var start = this.table.params.start + 1;
-	var end = start + this.table.params.limit + 1;
-	if (end > this.table.length) {
-		end = this.table.length;
-	}
-	$displayMessage.innerHTML = 'Displaying rows ' + start + ' through ' + end + ' of ' + this.table.length;
-	return $displayMessage;
+FancyTable.prototype._update = function () {
+	replaceElement(this.$body, this.renderBody());
+	replaceElement(this.$footer, this.renderFooter());
 }
 
 FancyTable.prototype.updateFilter = debounce(function (e) {
-	var value = e.target.value;
-	this.table.updateFilterPromise(value).then((table) => {
-		this.updateBody();
+	this.table.updateFilterPromise(e.target.value).then((table) => {
+		this._update();
 	})
 }, 1000);
 
 FancyTable.prototype.getNextPage = function () {
 	this.table.getNextPagePromise().then((table) => {
-		this.updateBody();
+		this._update();
 	});
 }
 
 FancyTable.prototype.getPreviousPage = function () {
 	this.table.getPreviousPagePromise().then((table) => {
-		this.updateBody();
+		this._update();
 	});
 }
 
