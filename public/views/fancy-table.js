@@ -4,8 +4,7 @@ function FancyTable (dataTable) {
 }
 
 FancyTable.prototype.render = function () {
-	var $table = document.createElement('table');
-	$table.setAttribute('id', 'fancy-table');
+	var $table = makeElement('table', {'id': 'fancy-table'})
 	var $body = this.renderBody();
 	var $footer = this.renderFooter();
 	$table.appendChild($footer);
@@ -14,13 +13,12 @@ FancyTable.prototype.render = function () {
 }
 
 FancyTable.prototype.renderBody = function () {
-	var $body = document.createElement('tbody');
+	var $body = makeElement('tbody');
 	this.table.data.map((company) => {
 		var $cell = document.createElement('td');
 		$cell.innerHTML = company.name;
-		var $row = document.createElement('tr');
-		var index = this.table.data.indexOf(company);
-		$row.setAttribute('id', 'index-' + index);
+		var $row = makeElement('tr', {'id': 'index-' + this.table.data.indexOf(company)});
+		$row.addEventListener('click', this.handleExpandRow.bind(this));
 		$row.appendChild($cell);
 		$body.appendChild($row);
 	});
@@ -34,20 +32,15 @@ FancyTable.prototype.updateBody = function () {
 		var $currentBodyParent = document.getElementsByTagName('table')[0];
 		$currentBodyParent.replaceChild($newBody, $currentBody);
 	}
-	Array.from(document.getElementsByTagName('tr')).slice(1).forEach((row) => {
-		row.addEventListener('click', this.handleExpandRow.bind(this));
-	});
 }
 
 FancyTable.prototype.renderFooter = function () {
 	var $footer = document.createElement('tfoot');
 	var $row = document.createElement('tr');
-	var $previousBtn = document.createElement('button');
+	var $previousBtn = makeElement('button', {'id': 'previous-btn'});
 	$previousBtn.innerHTML = 'Previous';
-	$previousBtn.setAttribute('id', 'previous-btn');
-	var $nextBtn = document.createElement('button');
+	var $nextBtn = makeElement('button', {'id': 'next-btn'});
 	$nextBtn.innerHTML = 'Next';
-	$nextBtn.setAttribute('id', 'next-btn');
 	$row.appendChild($previousBtn);
 	$row.appendChild($nextBtn);
 	$footer.appendChild($row);
@@ -64,9 +57,6 @@ FancyTable.prototype.addEventListeners = function () {
 	document.getElementById('next-btn').addEventListener(
 		'click', this.getNextPage.bind(this)
 	);
-	Array.from(document.getElementsByTagName('tr')).slice(1).forEach((row) => {
-		row.addEventListener('click', this.handleExpandRow.bind(this));
-	});
 }
 
 FancyTable.prototype.updateFilter = debounce(function (e) {
@@ -91,17 +81,17 @@ FancyTable.prototype.getPreviousPage = function () {
 FancyTable.prototype.handleExpandRow = function (e) {
 	var rowIndex = e.currentTarget.id.split('-')[1];
 	var company = this.table.data[rowIndex];
-	var $logo = document.createElement('img');
+
+	var $logo = makeElement('img', {'class': 'logo'});
 	$logo.src = company.avatarUrl;
-	$logo.setAttribute('class', 'logo')
-	var $imageContainer = document.createElement('span');
-	$imageContainer.appendChild($logo);
+	var $logoContainer = document.createElement('span');
+	$logoContainer.appendChild($logo);
 
 	var $infoContainer = document.createElement('span');
 	$infoContainer.innerHTML = "Information \n more information \n even more..."
 
 	var $newCell = document.createElement('td');
-	$newCell.appendChild($imageContainer);
+	$newCell.appendChild($logoContainer);
 	$newCell.appendChild($infoContainer);
 	e.target.replaceWith($newCell);
 }

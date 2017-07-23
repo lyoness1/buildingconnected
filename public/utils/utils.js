@@ -10,3 +10,12 @@ function debounce(fn, delay) {
     }, delay);
   };
 }
+
+function makeElement(tagName, options) {
+	var options = options || {};
+	var $el = document.createElement(tagName);
+	Object.entries(options).forEach(([key, value]) => {
+		$el.setAttribute(key, value);
+	});
+	return $el;
+}
