@@ -87,7 +87,7 @@ module.exports = [
   ],
   "name": "Hathaway Dinwiddie Construction Company",
   "phone": "(687) 499-3851",
-  "website": "http://zuifaju.gd/lug"
+  "website": "http://datafaju.gd/lug"
 },
 {
   "avatarUrl": "https://bc-prod.imgix.net/avatars/5430e7a65cdc2e0300dd73d8.jpeg?auto=format&fit=fill&bg=fff",

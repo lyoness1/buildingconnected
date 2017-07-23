@@ -19,3 +19,7 @@ function makeElement(tagName, options) {
 	});
 	return $el;
 }
+
+function replaceElement(oldElement, newElement) {
+	oldElement.parentNode.replaceChild(newElement);
+}
