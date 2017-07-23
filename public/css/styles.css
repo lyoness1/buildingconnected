@@ -5,7 +5,16 @@
     font: normal 16px Arial, sans-serif;
 }
 .data-table thead th {
+		font-size: 24px;
     background-color: #DDEFEF;
+    border: solid 1px #DDEEEE;
+    color: #336B6B;
+    padding: 10px;
+    text-align: left;
+    text-shadow: 1px 1px 1px #fff;
+}
+.data-table tfoot td {
+		font-size: 12px;
     border: solid 1px #DDEEEE;
     color: #336B6B;
     padding: 10px;

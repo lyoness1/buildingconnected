@@ -43,12 +43,14 @@ FancyTable.prototype.renderBody = function () {
 }
 
 FancyTable.prototype.renderFooter = function () {
-	var $footer = document.createElement('tfoot');
-	var $row = document.createElement('tr');
+	var $footer = makeElement('tfoot');
+	var $row = makeElement('tr');
+	var $cell = makeElement('td');
 	this.$footerMessage = this.renderFooterMessage();
 	this.$buttons = this.renderButtons();
-	$row.appendChild(this.$footerMessage);
-	$row.appendChild(this.$buttons);
+	$cell.appendChild(this.$footerMessage);
+	$cell.appendChild(this.$buttons);
+	$row.appendChild($cell);
 	$footer.appendChild($row);
 	return $footer;
 }
@@ -56,7 +58,7 @@ FancyTable.prototype.renderFooter = function () {
 FancyTable.prototype.renderFooterMessage = function () {
 	var $displayMessage = makeElement('span', {'id': 'display-message'});
 	var start = this.table.params.start + 1;
-	var end = (start + this.table.params.limit > this.table.length) ? this.table.length : (start + this.table.params.limit - 1);
+	var end = (start + this.table.params.limit > this.table.length) ? this.table.length : (start + this.table.params.limit - 1 );
 	$displayMessage.innerHTML = 'Displaying rows ' + start + ' through ' + end + ' of ' + this.table.length;
 	return $displayMessage;
 }
