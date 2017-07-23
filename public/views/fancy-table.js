@@ -120,16 +120,37 @@ FancyTable.prototype.handleExpandRow = function (e) {
 	var rowIndex = e.currentTarget.id.split('-')[1];
 	var company = this.table.data[rowIndex];
 
-	var $logo = makeElement('img', {'class': 'logo'});
-	$logo.src = company.avatarUrl;
+	var $logo = makeElement('img', {'class': 'logo', 'src': company.avatarUrl});
 	var $logoContainer = document.createElement('span');
 	$logoContainer.appendChild($logo);
 
-	var $infoContainer = document.createElement('span');
-	$infoContainer.innerHTML = "Information \n more information \n even more..."
+	var $infoContainer = this.renderInfo(company);
 
 	var $newCell = document.createElement('td');
 	$newCell.appendChild($logoContainer);
 	$newCell.appendChild($infoContainer);
 	e.target.replaceWith($newCell);
+}
+
+FancyTable.prototype.renderInfo = function (company) {
+	var $phone = makeElement('p');
+	$phone.innerHTML = "Phone: " + company.phone;
+
+	var $website = makeElement('p');
+	$website.innerHTML = "Website: ";
+	var $link = makeElement('a', {'href': company.website, 'target': '_blank'});
+	$link.innerHTML = company.website;
+	$website.appendChild($link);
+
+	var $laborTypes = makeElement('p');
+	$laborTypes.innerHTML = "Labor Type(s): " + company.laborType[0];
+	company.laborType.slice(1).forEach((type) => {
+		$laborTypes.innerHTML += ", " + type;
+	});
+
+	var $container = makeElement('span', {'class': 'company-info-text'});
+	$container.appendChild($website);
+	$container.appendChild($phone);
+	$container.appendChild($laborTypes);
+	return $container;
 }
