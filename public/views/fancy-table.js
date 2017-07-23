@@ -1,4 +1,4 @@
-// View to handle rendering of dataTable and table actions
+// View to handle rendering of DataTable and table actions
 function FancyTable (dataTable) {
 	this.table = dataTable;
 }

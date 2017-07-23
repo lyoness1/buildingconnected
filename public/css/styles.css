@@ -1,33 +1,31 @@
 .data-table {
-    border: solid 1px #DDEEEE;
-    border-collapse: collapse;
-    border-spacing: 0;
-    font: normal 16px Arial, sans-serif;
+  border: solid 1px #DDEEEE;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font: normal 16px Arial, sans-serif;
 }
 .data-table thead th {
-		font-size: 24px;
-    background-color: #DDEFEF;
-    border: solid 1px #DDEEEE;
-    color: #336B6B;
-    padding: 10px;
-    text-align: left;
-    text-shadow: 1px 1px 1px #fff;
+	font-size: 24px;
+  background-color: #DDEFEF;
+  border: solid 1px #DDEEEE;
+  color: #336B6B;
+  padding: 10px;
+  text-align: left;
+  text-shadow: 1px 1px 1px #fff;
 }
 .data-table tfoot td {
-		font-size: 12px;
-    border: solid 1px #DDEEEE;
-    color: #336B6B;
-    padding: 10px;
-    text-align: left;
-    text-shadow: 1px 1px 1px #fff;
+	font-size: 12px;
+  border: solid 1px #DDEEEE;
+  color: #336B6B;
+  padding: 10px;
+  text-align: left;
 }
 .data-table tbody td {
-    border: solid 1px #DDEEEE;
-    border-left: none;
-    border-right: none;
-    color: #333;
-    padding: 10px;
-    text-shadow: 1px 1px 1px #fff;
+  border: solid 1px #DDEEEE;
+  border-left: none;
+  border-right: none;
+  color: #333;
+  padding: 10px;
 }
 .data-table tbody tr:hover {
     background-color: #CCE7E7;
