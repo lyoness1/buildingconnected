@@ -21,5 +21,5 @@ function makeElement(tagName, options) {
 }
 
 function replaceElement(oldElement, newElement) {
-	oldElement.parentNode.replaceChild(newElement);
+	oldElement.parentNode.replaceChild(newElement, oldElement);
 }

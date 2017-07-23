@@ -56,7 +56,7 @@ FancyTable.prototype.renderFooter = function () {
 FancyTable.prototype.renderFooterMessage = function () {
 	var $displayMessage = makeElement('span', {'id': 'display-message'});
 	var start = this.table.params.start + 1;
-	var end = (start + this.table.params.limit > this.table.length) ? this.table.length : (start + this.table.params.limit);
+	var end = (start + this.table.params.limit > this.table.length) ? this.table.length : (start + this.table.params.limit - 1);
 	$displayMessage.innerHTML = 'Displaying rows ' + start + ' through ' + end + ' of ' + this.table.length;
 	return $displayMessage;
 }
@@ -88,8 +88,12 @@ FancyTable.prototype.renderButtons = function () {
 }
 
 FancyTable.prototype._update = function () {
-	replaceElement(this.$body, this.renderBody());
-	replaceElement(this.$footer, this.renderFooter());
+	var $currentBody = this.$body;
+	this.$body = this.renderBody();
+	replaceElement($currentBody, this.$body);
+	var $currentFooter = this.$footer;
+	this.$footer = this.renderFooter();
+	replaceElement($currentFooter, this.$footer);
 }
 
 FancyTable.prototype.updateFilter = debounce(function (e) {
