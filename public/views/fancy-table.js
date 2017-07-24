@@ -121,7 +121,7 @@ FancyTable.prototype.handleExpandRow = function (e) {
 	var company = this.table.data[rowIndex];
 
 	var $logo = makeElement('img', {'class': 'logo', 'src': company.avatarUrl});
-	var $logoContainer = document.createElement('span');
+	var $logoContainer = makeElement('span', {'class': 'logo-container'});
 	$logoContainer.appendChild($logo);
 
 	var $infoContainer = this.renderInfo(company);
