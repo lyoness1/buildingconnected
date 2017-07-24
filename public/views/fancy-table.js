@@ -15,15 +15,23 @@ FancyTable.prototype.render = function () {
 }
 
 FancyTable.prototype.renderHeader = function () {
+	// Entire header row
 	var $header = makeElement('thead');
-	var $row = makeElement('row');
+	var $row = makeElement('tr');
 	var $cell = makeElement('th');
-	var $title = makeElement('div')
+	var $headerWrapper = makeElement('div', {'class': 'header-wrapper'});
+	// Table title
+	var $title = makeElement('span', {'class': 'table-title'})
 	$title.innerHTML = 'Find a Company';
+	// Search input box and wrapper
 	var $searchBox = makeElement('input', {'id': 'search-input', 'placeholder': 'Search by name'});
 	$searchBox.addEventListener('input', this.updateFilter.bind(this));
-	$cell.appendChild($title);
-	$cell.appendChild($searchBox);
+	var $inputWrapper = makeElement('span', {'class': 'input-wrapper'});
+	$inputWrapper.appendChild($searchBox);
+	// Append pieces together
+	$headerWrapper.appendChild($title);
+	$headerWrapper.appendChild($inputWrapper);
+	$cell.appendChild($headerWrapper);
 	$row.appendChild($cell);
 	$header.appendChild($row);
 	return $header;
