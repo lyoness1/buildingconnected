@@ -72,7 +72,7 @@ FancyTable.prototype.renderFooter = function () {
 
 FancyTable.prototype.renderFooterMessage = function () {
 	var $displayMessage = makeElement('span', {'class': 'display-message'});
-	var start = this.table.params.start + 1;
+	var start = parseInt(this.table.params.start + 1);
 	var end = (start + this.table.params.limit > this.table.length) ? this.table.length : (start + this.table.params.limit - 1 );
 	$displayMessage.innerHTML = 'Displaying rows ' + start + '-' + end + ' of ' + this.table.length;
 	return $displayMessage;
