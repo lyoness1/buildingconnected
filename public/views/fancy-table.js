@@ -59,17 +59,19 @@ FancyTable.prototype.renderFooter = function () {
 	var $footer = makeElement('tfoot');
 	var $row = makeElement('tr');
 	var $cell = makeElement('td');
+	var $wrapper = makeElement('div', {'class': 'footer-wrapper'});
 	this.$footerMessage = this.renderFooterMessage();
 	this.$buttons = this.renderButtons();
-	$cell.appendChild(this.$footerMessage);
-	$cell.appendChild(this.$buttons);
+	$wrapper.appendChild(this.$footerMessage);
+	$wrapper.appendChild(this.$buttons);
+	$cell.appendChild($wrapper);
 	$row.appendChild($cell);
 	$footer.appendChild($row);
 	return $footer;
 }
 
 FancyTable.prototype.renderFooterMessage = function () {
-	var $displayMessage = makeElement('div', {'id': 'display-message'});
+	var $displayMessage = makeElement('span', {'id': 'display-message'});
 	var start = this.table.params.start + 1;
 	var end = (start + this.table.params.limit > this.table.length) ? this.table.length : (start + this.table.params.limit - 1 );
 	$displayMessage.innerHTML = 'Displaying rows ' + start + ' through ' + end + ' of ' + this.table.length;
@@ -77,10 +79,10 @@ FancyTable.prototype.renderFooterMessage = function () {
 }
 
 FancyTable.prototype.renderButtons = function () {
-	var $buttons = makeElement('div', {'class': 'buttons'});
+	var $buttons = makeElement('span', {'class': 'buttons'});
 
 	var $previousBtn = makeElement('button', {'id': 'previous-btn'});
-	$previousBtn.innerHTML = 'Previous';
+	$previousBtn.innerHTML = '< Previous ';
 	$previousBtn.addEventListener('click', this.getPreviousPage.bind(this));
 	if (this.table.params.start === 0) {
 		$previousBtn.classList.add('disabled');
@@ -89,7 +91,7 @@ FancyTable.prototype.renderButtons = function () {
 	}
 
 	var $nextBtn = makeElement('button', {'id': 'next-btn'});
-	$nextBtn.innerHTML = 'Next';
+	$nextBtn.innerHTML = ' Next >';
 	$nextBtn.addEventListener('click', this.getNextPage.bind(this));
 	if (this.table.params.start + this.table.params.limit + 1 > this.table.length) {
 		$nextBtn.classList.add('disabled');
