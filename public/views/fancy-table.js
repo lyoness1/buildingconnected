@@ -19,7 +19,7 @@ FancyTable.prototype.renderHeader = function () {
 	var $row = makeElement('row');
 	var $cell = makeElement('th');
 	var $title = makeElement('span')
-	$title.innerHTML = 'Companies';
+	$title.innerHTML = 'Find a Company';
 	var $searchBox = makeElement('input', {'id': 'search-input', 'placeholder': 'Search by name'});
 	$searchBox.addEventListener('input', this.updateFilter.bind(this));
 	$cell.appendChild($title);
@@ -117,8 +117,12 @@ FancyTable.prototype.getPreviousPage = function () {
 }
 
 FancyTable.prototype.handleExpandRow = function (e) {
+	var $
 	var rowIndex = e.currentTarget.id.split('-')[1];
 	var company = this.table.data[rowIndex];
+
+	var $name = makeElement('span', {'class': 'company-name expanded' });
+	$name.innerHTML = company.name;
 
 	var $logo = makeElement('img', {'class': 'logo', 'src': company.avatarUrl});
 	var $logoContainer = makeElement('span', {'class': 'logo-container'});
@@ -127,6 +131,7 @@ FancyTable.prototype.handleExpandRow = function (e) {
 	var $infoContainer = this.renderInfo(company);
 
 	var $newCell = document.createElement('td');
+	$newCell.appendChild($name);
 	$newCell.appendChild($logoContainer);
 	$newCell.appendChild($infoContainer);
 	e.target.replaceWith($newCell);

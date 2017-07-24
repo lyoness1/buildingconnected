@@ -1,5 +1,5 @@
 body {
-	padding-left: 100px;
+	padding: 60px 100px;
 }
 .data-table {
   border: solid 1px #DDEEEE;
@@ -28,13 +28,13 @@ body {
   border-left: none;
   border-right: none;
   color: #333;
-  padding: 10px;
+  padding: 15px;
 }
 .data-table tbody td p {
 	margin: 6px 0px;
 }
 .data-table tbody tr:hover {
-    background-color: #CCE7E7;
+   background-color: #CCE7E7;
 }
 
 .logo {
@@ -42,6 +42,15 @@ body {
 	max-height: 60px;
 	width: auto;
 	height: auto;
+}
+
+.company-name {
+	width: 100%;
+	display: inline-block;
+	margin-bottom: 5px;
+}
+.company-name.expanded {
+	font-weight: 600;
 }
 
 .logo-container {
