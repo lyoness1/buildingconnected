@@ -4,7 +4,7 @@ function FancyTable (dataTable) {
 }
 
 FancyTable.prototype.render = function () {
-	this.$table = makeElement('table', {'id': 'fancy-table', 'class': 'data-table'})
+	this.$table = makeElement('table', {'class': 'fancy-table data-table'})
 	this.$header = this.renderHeader();
 	this.$body = this.renderBody();
 	this.$footer = this.renderFooter();
@@ -24,7 +24,7 @@ FancyTable.prototype.renderHeader = function () {
 	var $title = makeElement('span', {'class': 'table-title'})
 	$title.innerHTML = 'Find a Company';
 	// Search input box and wrapper
-	var $searchBox = makeElement('input', {'id': 'search-input', 'placeholder': 'Search by name'});
+	var $searchBox = makeElement('input', {'class': 'search-input', 'placeholder': 'Search by name'});
 	$searchBox.addEventListener('input', this.updateFilter.bind(this));
 	var $inputWrapper = makeElement('span', {'class': 'input-wrapper'});
 	$inputWrapper.appendChild($searchBox);
@@ -38,7 +38,7 @@ FancyTable.prototype.renderHeader = function () {
 }
 
 FancyTable.prototype.renderBody = function () {
-	var $body = makeElement('tbody', {'id': 'fancy-table-body'});
+	var $body = makeElement('tbody', {'class': 'fancy-table-body'});
 	this.table.data.map((company) => {
 		var $row = this.renderRow(company);
 		$row.addEventListener('click', this.handleExpandRow.bind(this));
@@ -71,10 +71,10 @@ FancyTable.prototype.renderFooter = function () {
 }
 
 FancyTable.prototype.renderFooterMessage = function () {
-	var $displayMessage = makeElement('span', {'id': 'display-message'});
+	var $displayMessage = makeElement('span', {'class': 'display-message'});
 	var start = this.table.params.start + 1;
 	var end = (start + this.table.params.limit > this.table.length) ? this.table.length : (start + this.table.params.limit - 1 );
-	$displayMessage.innerHTML = 'Displaying rows ' + start + ' through ' + end + ' of ' + this.table.length;
+	$displayMessage.innerHTML = 'Displaying rows ' + start + '-' + end + ' of ' + this.table.length;
 	return $displayMessage;
 }
 

@@ -1,3 +1,14 @@
+/*
+333 - 'black'
+666 - dark grey
+999 - medium grey
+CCC - light grey
+
+336699 - dark blue
+6599CC - medium blue
+B2CCE5 - light blue
+*/
+
 body {
 	padding: 60px 100px;
 }
@@ -7,22 +18,19 @@ input {
 }
 button {
  background:none!important;
- color: #336B6B;
+ color: #1CAFAF;  /* teal */
  border:none; 
  padding: 4px;
  margin-left: 6px;
  font: inherit;
  cursor: pointer;
 }
-button:hover {
-  background: #3cb0fd;
-}
 button.disabled {
-  color: #DDEFEF;
+  color: #999;  /* medium grey */
   cursor: auto;
 }
 .data-table {
-  border: solid 1px #DDEEEE;
+  border: solid 1px #CCC;  /* light grey */
   border-collapse: collapse;
   border-spacing: 0;
   font: normal 16px Arial, sans-serif;
@@ -30,23 +38,23 @@ button.disabled {
 .data-table thead th {
 	width: 100%;
 	font-size: 24px;
-  background-color: #DDEFEF;
-  border: solid 1px #DDEEEE;
-  color: #336B6B;
+  background-color: #6599CC;  /* medium blue */
+  border: solid 1px #6599CC;  /* medium blue */
+  color: #333;  /* 'black' */
   padding: 10px;
 }
 .data-table tfoot td {
 	width: 100%;
 	font-size: 12px;
-  border: solid 1px #DDEEEE;
-  color: #336B6B;
-  padding: 10px;
+  border: solid 1px #CCC;  /* light grey */
+  color: #666;  /* dark grey */
+  padding: 5px 10px;
 }
 .data-table tbody td {
-  border: solid 1px #DDEEEE;
+  border: solid 1px #CCC;  /* light grey */
   border-left: none;
   border-right: none;
-  color: #333;
+  color: #333; /* 'black' */
   padding: 10px;
 }
 .data-table tbody td p {
@@ -54,7 +62,7 @@ button.disabled {
 }
 .data-table tbody tr:hover {
 	cursor: pointer;
-  background-color: #CCE7E7;
+  background-color: #B2CCE5;  /* light blue */
 }
 .header-wrapper {
 	width: 100%;
@@ -62,6 +70,7 @@ button.disabled {
 .table-title {
 	margin-right: 20px;
 	float: left;
+	padding-top: 2px;
 }
 .input-wrapper {
 	float: right;
@@ -96,12 +105,14 @@ button.disabled {
 	display: inline-block;
 	margin-left: 12px;
 }
-.footer-wrapper {
-	height: 100%;
+.footer-wrapper > * {
 	vertical-align: middle;
+	line-height: normal;
 }
 .display-message {
 	float: left;
+	display: inline-block;
+	padding-top: 4px;
 }
 .buttons {
 	float: right;
