@@ -18,7 +18,7 @@ FancyTable.prototype.renderHeader = function () {
 	var $header = makeElement('thead');
 	var $row = makeElement('row');
 	var $cell = makeElement('th');
-	var $title = makeElement('span')
+	var $title = makeElement('div')
 	$title.innerHTML = 'Find a Company';
 	var $searchBox = makeElement('input', {'id': 'search-input', 'placeholder': 'Search by name'});
 	$searchBox.addEventListener('input', this.updateFilter.bind(this));
@@ -32,14 +32,19 @@ FancyTable.prototype.renderHeader = function () {
 FancyTable.prototype.renderBody = function () {
 	var $body = makeElement('tbody', {'id': 'fancy-table-body'});
 	this.table.data.map((company) => {
-		var $cell = document.createElement('td');
-		$cell.innerHTML = company.name;
-		var $row = makeElement('tr', {'id': 'index-' + this.table.data.indexOf(company)});
+		var $row = this.renderRow(company);
 		$row.addEventListener('click', this.handleExpandRow.bind(this));
-		$row.appendChild($cell);
 		$body.appendChild($row);
 	});
 	return $body;
+}
+
+FancyTable.prototype.renderRow = function (company) {
+	var $cell = makeElement('td');
+	$cell.innerHTML = company.name;
+	var $row = makeElement('tr', {'id': 'index-' + this.table.data.indexOf(company)});
+	$row.appendChild($cell);
+	return $row;
 }
 
 FancyTable.prototype.renderFooter = function () {
@@ -56,7 +61,7 @@ FancyTable.prototype.renderFooter = function () {
 }
 
 FancyTable.prototype.renderFooterMessage = function () {
-	var $displayMessage = makeElement('span', {'id': 'display-message'});
+	var $displayMessage = makeElement('div', {'id': 'display-message'});
 	var start = this.table.params.start + 1;
 	var end = (start + this.table.params.limit > this.table.length) ? this.table.length : (start + this.table.params.limit - 1 );
 	$displayMessage.innerHTML = 'Displaying rows ' + start + ' through ' + end + ' of ' + this.table.length;
@@ -64,7 +69,7 @@ FancyTable.prototype.renderFooterMessage = function () {
 }
 
 FancyTable.prototype.renderButtons = function () {
-	var $buttons = makeElement('span', {'class': 'buttons'});
+	var $buttons = makeElement('div', {'class': 'buttons'});
 
 	var $previousBtn = makeElement('button', {'id': 'previous-btn'});
 	$previousBtn.innerHTML = 'Previous';
@@ -117,24 +122,37 @@ FancyTable.prototype.getPreviousPage = function () {
 }
 
 FancyTable.prototype.handleExpandRow = function (e) {
-	var $
 	var rowIndex = e.currentTarget.id.split('-')[1];
 	var company = this.table.data[rowIndex];
+	var $row = makeElement('tr', {'id': 'index-' + this.table.data.indexOf(company)});
 
-	var $name = makeElement('span', {'class': 'company-name expanded' });
-	$name.innerHTML = company.name;
+	var $nameSubRow = makeElement('div', {'class': 'company-name expanded' });
+	$nameSubRow.innerHTML = company.name;
 
+	var $infoSubRow = makeElement('div', {'class': 'company-info'});
 	var $logo = makeElement('img', {'class': 'logo', 'src': company.avatarUrl});
-	var $logoContainer = makeElement('span', {'class': 'logo-container'});
+	var $logoContainer = makeElement('div', {'class': 'logo-container'});
 	$logoContainer.appendChild($logo);
+	var $info = this.renderInfo(company);
+	$infoSubRow.appendChild($logoContainer);
+	$infoSubRow.appendChild($info);
 
-	var $infoContainer = this.renderInfo(company);
+	var $cell = makeElement('td');
+	$cell.appendChild($nameSubRow);
+	$cell.appendChild($infoSubRow);
 
-	var $newCell = document.createElement('td');
-	$newCell.appendChild($name);
-	$newCell.appendChild($logoContainer);
-	$newCell.appendChild($infoContainer);
-	e.target.replaceWith($newCell);
+	$row.appendChild($cell)
+	$row.addEventListener('click', this.handleCollapseRow.bind(this));
+
+	e.currentTarget.replaceWith($row);
+}
+
+FancyTable.prototype.handleCollapseRow = function (e) {
+	var rowIndex = e.currentTarget.id.split('-')[1];
+	var company = this.table.data[rowIndex];
+	var $row = this.renderRow(company);
+	$row.addEventListener('click', this.handleExpandRow.bind(this));
+	e.currentTarget.replaceWith($row);
 }
 
 FancyTable.prototype.renderInfo = function (company) {
@@ -153,7 +171,7 @@ FancyTable.prototype.renderInfo = function (company) {
 		$laborTypes.innerHTML += ", " + type;
 	});
 
-	var $container = makeElement('span', {'class': 'company-info-text'});
+	var $container = makeElement('div', {'class': 'company-info-text'});
 	$container.appendChild($website);
 	$container.appendChild($phone);
 	$container.appendChild($laborTypes);
