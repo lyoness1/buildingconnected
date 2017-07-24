@@ -63,5 +63,6 @@ DataTable.prototype.setLimitPromise = function (limit) {
 
 DataTable.prototype.updateFilterPromise = function (searchTerm) {
 	this.params.searchTerm = searchTerm;
+	this.params.start = 0;
 	return this.getDataPromise();
 }

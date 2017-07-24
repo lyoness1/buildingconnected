@@ -86,8 +86,10 @@ FancyTable.prototype.renderButtons = function () {
 	$previousBtn.addEventListener('click', this.getPreviousPage.bind(this));
 	if (this.table.params.start === 0) {
 		$previousBtn.classList.add('disabled');
-	} else {
-		$previousBtn.classList.contains('disabled') ? $previousBtn.classList.remove('disabled') : noop();
+		$previousBtn.setAttribute('disabled', '')
+	} else if ($previousBtn.classList.contains('disabled')) {
+		$previousBtn.classList.remove('disabled');
+		$previousBtn.removeAttribute('disabled');
 	}
 
 	var $nextBtn = makeElement('button', {'id': 'next-btn'});
@@ -95,8 +97,10 @@ FancyTable.prototype.renderButtons = function () {
 	$nextBtn.addEventListener('click', this.getNextPage.bind(this));
 	if (this.table.params.start + this.table.params.limit + 1 > this.table.length) {
 		$nextBtn.classList.add('disabled');
-	} else {
-		$nextBtn.classList.contains('disabled') ? $nextBtn.classList.remove('disabled') : noop();
+		$previousBtn.setAttribute('disabled', '')
+	} else if ($nextBtn.classList.contains('disabled')) {
+		$nextBtn.classList.remove('disabled');
+		$previousBtn.removeAttribute('disabled', '')
 	}
 
 	$buttons.appendChild($previousBtn);
