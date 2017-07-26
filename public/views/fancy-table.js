@@ -97,10 +97,10 @@ FancyTable.prototype.renderButtons = function () {
 	$nextBtn.addEventListener('click', this.getNextPage.bind(this));
 	if (this.table.params.start + this.table.params.limit + 1 > this.table.length) {
 		$nextBtn.classList.add('disabled');
-		$previousBtn.setAttribute('disabled', '')
+		$nextBtn.setAttribute('disabled', '')
 	} else if ($nextBtn.classList.contains('disabled')) {
 		$nextBtn.classList.remove('disabled');
-		$previousBtn.removeAttribute('disabled', '')
+		$nextBtn.removeAttribute('disabled', '')
 	}
 
 	$buttons.appendChild($previousBtn);
